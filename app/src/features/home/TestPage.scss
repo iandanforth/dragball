@@ -1,0 +1,14 @@
+@import '../../styles/mixins';
+
+.home-test-page {
+
+  .ball {
+    $ball-diameter: 200px;
+    height: $ball-diameter;
+    width: $ball-diameter;
+    border-radius: $ball-diameter / 2; 
+    background-color: #8645bf;
+    position: absolute;
+  }
+
+}
