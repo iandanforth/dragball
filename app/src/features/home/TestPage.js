@@ -46,34 +46,59 @@ export class TestPage extends Component {
       strokeWidth: 1
     };
 
-    const scaleFactor = 2**-depth;
-    const offset = 60 * depth;
+    // Translation
     let x = 100;
     let y = 100;
     if (side === 1) {
-      x += offset;
+      x = 0;
     }
     if (side === -1) {
-      y += offset;
+      y = 0;
     }
+
+    // Scaling
+    const scaleFactor = (side !== 0) ? 0.5 : 1;
+
+    // Rotation
+
+    // Mouse responsiveness
+    const { mX, mY } = this.state;
+    const angleRad = Math.atan(mY / mX);
+    const angleDeg = (angleRad / Math.PI) * 180;
+    const mouseImpact = 3;
+
+    let deflection = 0;
+    if (side === 1) {
+      deflection = 10;
+      deflection += angleDeg / mouseImpact;
+    }
+    if (side === -1) {
+      deflection = -10;
+      deflection -= angleDeg / mouseImpact;
+    }
+
+
+
+    const polyTransform = this.translateString(x, y) + this.rotateString(deflection) + this.scaleString(scaleFactor);
+
     const key = `${parentKey}, ${depth}, ${side}`;
 
-    const polyTransform = this.translateString(x, y) + this.rotateString(0) + this.scaleString(scaleFactor);
+    const left = this.getFractalPoly((depth + 1), maxDepth, -1, key);
+    const right = this.getFractalPoly((depth + 1), maxDepth, 1, key);
 
     const newPoly = (
-      <polygon
-        points="0,0 0,100 100,0"
-        style={polyStyles} 
-        transform={polyTransform}
-        key={key}
-      />
+      <g transform={polyTransform}>
+        <polygon
+          points="0,0 0,100 100,0"
+          style={polyStyles}
+          key={key}
+        />
+        {left}
+        {right}
+      </g>
     );
-    polys.push(newPoly);
 
-    polys = polys.concat(this.getFractalPoly((depth + 1), maxDepth, -1, key));
-    polys = polys.concat(this.getFractalPoly((depth + 1), maxDepth, 1, key));
-
-    return polys;
+    return newPoly;
   }
 
   updateMouseLoc(e) {
@@ -133,16 +158,17 @@ export class TestPage extends Component {
 
     return (
       <div className="home-test-page">
-        <div 
-          className="ball" 
-          style={ballStyles} 
-          onMouseDown={this.handleBallMouseDown}
-          onMouseUp={this.handleBallMouseUp} >
-          <svg height="210" width="500">
-            {this.getFractalPoly(0, 3)}
+        <div className="ball-fractal-container">
+          <div 
+            className="ball" 
+            style={ballStyles} 
+            onMouseDown={this.handleBallMouseDown}
+            onMouseUp={this.handleBallMouseUp} >
+          </div>
+          <svg height="500px">
+            {this.getFractalPoly(0, 7)}
           </svg>
         </div>
-
       </div>
     );
   }
