@@ -4,6 +4,10 @@ import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
 
+function getRndInteger(min, max) {
+  return Math.floor(Math.random() * (max - min + 1) ) + min;
+}
+
 export class TestPage extends Component {
   static propTypes = {
     home: PropTypes.object.isRequired,
@@ -13,10 +17,39 @@ export class TestPage extends Component {
   constructor() {
     super();
 
+    // Make a graph
+    const minLoc = 200;
+    const maxLoc = 1000;
+    const nodes = {};
+    const nodeCount = 73;
+    for (let i=1; i<=nodeCount; i++) {
+      const newPoint = {
+        x: getRndInteger(minLoc, maxLoc),
+        y: getRndInteger(minLoc, maxLoc)
+      };
+
+      nodes[i] = newPoint;
+    }
+
+    const edges = [];
+    const edgeCount = 50;
+    for (let i=0; i<edgeCount; i++) {
+      const edge = {
+        startId: getRndInteger(1, nodeCount),
+        endId: getRndInteger(1, nodeCount),
+      };
+
+      edges.push(edge);
+    }
+
     this.state = {
       mX: 0,
       mY: 0,
-      dragging: false
+      dragging: false,
+      nodes: nodes,
+      edges: edges,
+      nodeDragging: false,
+      activeNodeId: null
     };
 
     this.updateMouseLoc = this.updateMouseLoc.bind(this);
@@ -24,14 +57,87 @@ export class TestPage extends Component {
     this.handleBallMouseUp = this.handleBallMouseUp.bind(this);
     this.handleMouseOut = this.handleMouseOut.bind(this);
     this.getFractalPoly = this.getFractalPoly.bind(this);
+    this.getGraph = this.getGraph.bind(this);
+    this.getNode = this.getNode.bind(this);
+    this.handleNodeMouseDown = this.handleNodeMouseDown.bind(this);
+    this.handleNodeMouseUp = this.handleNodeMouseUp.bind(this);
+    this.updateNodeLoc = this.updateNodeLoc.bind(this);
   }
 
   componentDidMount() {
-    this.mmHandler = window.addEventListener('mousemove', this.updateMouseLoc);
+    this.mmHandler = window.addEventListener('mousemove', (e) => {
+      this.updateMouseLoc(e);
+      this.updateNodeLoc(e);
+    });
+    this.muHandler = window.addEventListener('mouseup', () => {
+      this.handleNodeMouseUp();
+      this.handleBallMouseUp();
+    });
   }
 
   componentWillUnmount() {
     window.removeEventListener('mousemove', this.mmHandler);
+    window.removeEventListener('mouseup', this.muHandler);
+  }
+
+  getNode(point, key) {
+    const { x, y } = point;
+    const nodeStyles = {
+      fill: 'blue',
+      stroke: 'black',
+      strokeWidth: 1
+    };
+
+    return (
+      <circle
+        cx={x}
+        cy={y}
+        r="20"
+        style={nodeStyles}
+        key={key}
+        onMouseDown={() => { this.handleNodeMouseDown(key); }}
+      />
+    );
+  }
+
+  getEdge(pointA, pointB, key) {
+    const { x: x1, y: y1 } = pointA;
+    const { x: x2, y: y2 } = pointB;
+
+    const edgeStyles = {
+      stroke: 'blue',
+      strokeWidth: 5
+    };
+    return (
+      <line x1={x1} x2={x2} y1={y1} y2={y2} style={edgeStyles} key={key} />
+    );
+  }
+
+  getGraph() {
+    const nodes = [];
+    let edgeData;
+
+    for (let nodeId in this.state.nodes) {
+      const nodeData = this.state.nodes[nodeId];
+      nodes.push(this.getNode(nodeData, nodeId));
+    }
+
+    const edges = [];
+    let ind;
+    for ([ind, edgeData] of this.state.edges.entries()) {
+      const startNode = this.state.nodes[edgeData.startId];
+      const endNode = this.state.nodes[edgeData.endId];
+      edges.push(this.getEdge(startNode, endNode, ind));
+    }
+
+    const graph = (
+      <g>
+        {nodes}
+        {edges}
+      </g>
+    );
+
+    return graph;
   }
 
   getFractalPoly(depth = 0, maxDepth = 1, side = 0, parentKey = '') {
@@ -76,8 +182,6 @@ export class TestPage extends Component {
       deflection = -10;
       deflection -= angleDeg / mouseImpact;
     }
-
-
 
     const polyTransform = this.translateString(x, y) + this.rotateString(deflection) + this.scaleString(scaleFactor);
 
@@ -128,7 +232,38 @@ export class TestPage extends Component {
     });
   }
 
+  updateNodeLoc(e) {
+    if (this.state.nodeDragging === true) {
+      const { nodes } = this.state;
+      nodes[this.state.activeNodeId] = {
+        x: e.clientX,
+        y: e.clientY
+      };
+      this.setState({
+        nodes: nodes
+      });
+    }
+  }
+
+  handleNodeMouseDown(nodeId) {
+    this.setState({
+      nodeDragging: true,
+      activeNodeId: nodeId
+    });
+  }
+
+  handleNodeMouseUp() {
+    console.log('I fired!');
+    this.setState({
+      nodeDragging: false,
+      activeNodeId: null
+    });
+  }
+
   rotateString(deg) {
+    if (isNaN(deg)) {
+      deg = 0;
+    }
     return ` rotate(${deg}) `;
   }
 
@@ -163,10 +298,10 @@ export class TestPage extends Component {
             className="ball" 
             style={ballStyles} 
             onMouseDown={this.handleBallMouseDown}
-            onMouseUp={this.handleBallMouseUp} >
-          </div>
-          <svg height="500px">
+          />
+          <svg height="1000px" width="1000px">
             {this.getFractalPoly(0, 7)}
+            {this.getGraph()}
           </svg>
         </div>
       </div>
