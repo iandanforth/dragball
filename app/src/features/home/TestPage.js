@@ -85,7 +85,8 @@ export class TestPage extends Component {
     const nodeStyles = {
       fill: 'blue',
       stroke: 'black',
-      strokeWidth: 1
+      strokeWidth: 1,
+      zIndex: 10
     };
 
     return (
@@ -106,7 +107,9 @@ export class TestPage extends Component {
 
     const edgeStyles = {
       stroke: 'blue',
-      strokeWidth: 5
+      strokeWidth: 5,
+      pointerEvents: 'none',
+      zIndex: -1
     };
     return (
       <line x1={x1} x2={x2} y1={y1} y2={y2} style={edgeStyles} key={key} />
@@ -132,8 +135,8 @@ export class TestPage extends Component {
 
     const graph = (
       <g>
-        {nodes}
         {edges}
+        {nodes}
       </g>
     );
 
@@ -299,7 +302,7 @@ export class TestPage extends Component {
             style={ballStyles} 
             onMouseDown={this.handleBallMouseDown}
           />
-          <svg height="1000px" width="1000px">
+          <svg height="100%" width="100%">
             {this.getFractalPoly(0, 7)}
             {this.getGraph()}
           </svg>

@@ -2,6 +2,12 @@
 
 .home-test-page {
 
+  height: 100%;
+
+  .ball-fractal-container {
+    height: 100%;
+  }
+
   .ball {
     $ball-diameter: 200px;
     height: $ball-diameter;
