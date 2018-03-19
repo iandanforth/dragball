@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import * as actions from './redux/actions';
+import { ContextMenu, MenuItem, ContextMenuTrigger, hideMenu, showMenu } from 'react-contextmenu';
 
 function getRndInteger(min, max) {
   return Math.floor(Math.random() * (max - min + 1) ) + min;
@@ -73,6 +74,15 @@ export class TestPage extends Component {
       this.handleNodeMouseUp();
       this.handleBallMouseUp();
     });
+
+
+    const target = document.getElementById('ball');
+    const showMenuConfig = {
+      position: { x: 200, y: 200 },
+      target: target,
+      id: 'a_neat_menu_thing'
+    };
+    showMenu();
   }
 
   componentWillUnmount() {
@@ -298,7 +308,8 @@ export class TestPage extends Component {
       <div className="home-test-page">
         <div className="ball-fractal-container">
           <div 
-            className="ball" 
+            className="ball"
+            id="ball"
             style={ballStyles} 
             onMouseDown={this.handleBallMouseDown}
           />
@@ -307,6 +318,18 @@ export class TestPage extends Component {
             {this.getGraph()}
           </svg>
         </div>
+        <ContextMenu id="some_unique_identifier">
+          <MenuItem onClick={this.handleClick}>
+            ContextMenu Item 1
+          </MenuItem>
+          <MenuItem onClick={this.handleClick}>
+            ContextMenu Item 2
+          </MenuItem>
+          <MenuItem divider />
+          <MenuItem onClick={this.handleClick}>
+            ContextMenu Item 3
+          </MenuItem>
+        </ContextMenu>
       </div>
     );
   }
