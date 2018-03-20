@@ -50,7 +50,9 @@ export class TestPage extends Component {
       nodes: nodes,
       edges: edges,
       nodeDragging: false,
-      activeNodeId: null
+      activeNodeId: null,
+      mbX: 400,
+      mbY: 400
     };
 
     this.updateMouseLoc = this.updateMouseLoc.bind(this);
@@ -63,6 +65,8 @@ export class TestPage extends Component {
     this.handleNodeMouseDown = this.handleNodeMouseDown.bind(this);
     this.handleNodeMouseUp = this.handleNodeMouseUp.bind(this);
     this.updateNodeLoc = this.updateNodeLoc.bind(this);
+    this.getMovingBall = this.getMovingBall.bind(this);
+    this.updateAnim = this.updateAnim.bind(this);
   }
 
   componentDidMount() {
@@ -75,6 +79,7 @@ export class TestPage extends Component {
       this.handleBallMouseUp();
     });
 
+    window.requestAnimationFrame(this.updateAnim);
 
     const target = document.getElementById('ball');
     const showMenuConfig = {
@@ -90,13 +95,30 @@ export class TestPage extends Component {
     window.removeEventListener('mouseup', this.muHandler);
   }
 
+  getMovingBall() {
+    const { mbX, mbY } = this.state;
+    const radius = 30;
+    const ballStyles = {
+      fill: 'orange',
+      stroke: 'black',
+      strokeWidth: 1
+    };
+    return (
+      <circle
+        cx={mbX}
+        cy={mbY}
+        r={radius}
+        style={ballStyles}
+      />
+    );
+  }
+
   getNode(point, key) {
     const { x, y } = point;
     const nodeStyles = {
       fill: 'blue',
       stroke: 'black',
-      strokeWidth: 1,
-      zIndex: 10
+      strokeWidth: 1
     };
 
     return (
@@ -218,6 +240,13 @@ export class TestPage extends Component {
     return newPoly;
   }
 
+  updateAnim() {
+    this.setState({
+      mbX: 400 + (Math.sin(Date.now() / 1000) * 100)
+    });
+    window.requestAnimationFrame(this.updateAnim);
+  }
+
   updateMouseLoc(e) {
     if (this.state.dragging === true) {
       this.setState({
@@ -316,6 +345,7 @@ export class TestPage extends Component {
           <svg height="100%" width="100%">
             {this.getFractalPoly(0, 7)}
             {this.getGraph()}
+            {this.getMovingBall()}
           </svg>
         </div>
         <ContextMenu id="some_unique_identifier">
