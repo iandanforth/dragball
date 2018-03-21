@@ -51,8 +51,8 @@ export class TestPage extends Component {
       edges: edges,
       nodeDragging: false,
       activeNodeId: null,
-      mbX: 400,
-      mbY: 400
+      mbX: 0,
+      mbY: 0
     };
 
     this.updateMouseLoc = this.updateMouseLoc.bind(this);
@@ -79,7 +79,7 @@ export class TestPage extends Component {
       this.handleBallMouseUp();
     });
 
-    window.requestAnimationFrame(this.updateAnim);
+    // window.requestAnimationFrame(this.updateAnim);
 
     const target = document.getElementById('ball');
     const showMenuConfig = {
@@ -318,11 +318,12 @@ export class TestPage extends Component {
   }
 
   render() {
+    const { mY, mX, mbX, mbY } = this.state;
     const ballRadius = 100;
 
     const ballStyles = {
-      top: this.state.mY - ballRadius,
-      left: this.state.mX - ballRadius
+      top: mY - ballRadius,
+      left: mX - ballRadius
     };
 
     const polyStyles = {
@@ -331,7 +332,13 @@ export class TestPage extends Component {
       'stroke-width': 1
     };
 
-    const polyTransform = this.translateString(ballRadius, ballRadius) + this.rotateString(0);
+    const smallBallTransform = this.translateString(mbX, mbY);
+
+    const smallBallStyles = {
+      fill: 'orange',
+      stroke: 'black',
+      strokeWidth: 1
+    };
 
     return (
       <div className="home-test-page">
@@ -343,9 +350,15 @@ export class TestPage extends Component {
             onMouseDown={this.handleBallMouseDown}
           />
           <svg height="100%" width="100%">
-            {this.getFractalPoly(0, 7)}
+            {this.getFractalPoly(0, 6)}
             {this.getGraph()}
-            {this.getMovingBall()}
+            <circle
+              transform={smallBallTransform}
+              cx="400"
+              cy="400"
+              r="30"
+              style={smallBallStyles}
+            />
           </svg>
         </div>
         <ContextMenu id="some_unique_identifier">
