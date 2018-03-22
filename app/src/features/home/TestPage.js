@@ -79,7 +79,7 @@ export class TestPage extends Component {
       this.handleBallMouseUp();
     });
 
-    // window.requestAnimationFrame(this.updateAnim);
+    window.requestAnimationFrame(this.updateAnim);
 
     const target = document.getElementById('ball');
     const showMenuConfig = {
@@ -352,28 +352,19 @@ export class TestPage extends Component {
           <svg height="100%" width="100%">
             {this.getFractalPoly(0, 6)}
             {this.getGraph()}
-            <circle
-              transform={smallBallTransform}
-              cx="400"
-              cy="400"
-              r="30"
-              style={smallBallStyles}
-            />
           </svg>
         </div>
-        <ContextMenu id="some_unique_identifier">
-          <MenuItem onClick={this.handleClick}>
-            ContextMenu Item 1
-          </MenuItem>
-          <MenuItem onClick={this.handleClick}>
-            ContextMenu Item 2
-          </MenuItem>
-          <MenuItem divider />
-          <MenuItem onClick={this.handleClick}>
-            ContextMenu Item 3
-          </MenuItem>
-        </ContextMenu>
+        <svg className="ball-svg" height="100%" width="100%">
+          <circle
+            transform={smallBallTransform}
+            cx="400"
+            cy="400"
+            r="30"
+            style={smallBallStyles}
+          />
+        </svg>
       </div>
+
     );
   }
 }
