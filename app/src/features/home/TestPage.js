@@ -79,7 +79,7 @@ export class TestPage extends Component {
       this.handleBallMouseUp();
     });
 
-    window.requestAnimationFrame(this.updateAnim);
+    // window.requestAnimationFrame(this.updateAnim);
 
     const target = document.getElementById('ball');
     const showMenuConfig = {
