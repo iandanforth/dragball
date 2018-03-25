@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Sprite, Stage } from 'react-pixi-fiber';
 import * as PIXI from 'pixi.js';
 import bunny from '../../../bunny.png';
+import Rectangle from './Rectangle';
 
 
 function Bunny(props) {
@@ -22,6 +23,7 @@ export default class CanvasTestPage extends Component {
       bX: 0
     };
     this.updateAnim = this.updateAnim.bind(this);
+    this.getRects = this.getRects.bind(this);
   }
 
   componentDidMount() {
@@ -30,6 +32,27 @@ export default class CanvasTestPage extends Component {
 
   translateString(x, y) {
     return ` translate(${x},${y}) `;
+  }
+
+  getRects() {
+    const rects = [];
+    const numRects = 100;
+    for (let i = 0; i < numRects; i++) {
+      const x = Math.floor(Math.random() * 300);
+      const y = Math.floor(Math.random() * 300);
+      const rect = (
+        <Rectangle
+          x={x}
+          y={y}
+          width={20}
+          height={20}
+          fill={0xFFFF00}
+          id={`rect-${i}`}
+        />
+      );
+      rects.push(rect);
+    }
+    return rects;
   }
 
   updateAnim() {
@@ -41,11 +64,17 @@ export default class CanvasTestPage extends Component {
 
   render() {
     const { bX } = this.state;
-    const bunnyTransform = this.translateString(bX, 0);
-
     return (
       <div className="home-canvas-test-page">
         <Stage width={800} height={600} options={{ backgroundColor: 0x10bb99 }}>
+          { this.getRects() }
+          <Rectangle
+            x={250}
+            y={200}
+            width={bX}
+            height={bX}
+            fill={0xFFFF00}
+          />
           <Bunny x={bX} y={200} />
         </Stage>
       </div>
