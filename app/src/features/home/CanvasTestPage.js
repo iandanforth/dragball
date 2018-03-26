@@ -20,18 +20,16 @@ export default class CanvasTestPage extends Component {
     super();
 
     this.state = {
-      bX: 0
+      bX: 0,
+      go: true
     };
     this.updateAnim = this.updateAnim.bind(this);
     this.getRects = this.getRects.bind(this);
+    this.handleClick = this.handleClick.bind(this);
   }
 
   componentDidMount() {
     window.requestAnimationFrame(this.updateAnim);
-  }
-
-  translateString(x, y) {
-    return ` translate(${x},${y}) `;
   }
 
   getRects() {
@@ -55,10 +53,20 @@ export default class CanvasTestPage extends Component {
     return rects;
   }
 
-  updateAnim() {
+  handleClick() {
+    const { go } = this.state;
     this.setState({
-      bX: 400 + (Math.sin(Date.now() / 1000) * 100)
+      go: !go
     });
+  }
+
+  updateAnim() {
+    const { go } = this.state;
+    if (go) {
+      this.setState({
+        bX: 400 + (Math.sin(Date.now() / 1000) * 100)
+      });
+    }
     window.requestAnimationFrame(this.updateAnim);
   }
 
@@ -75,7 +83,16 @@ export default class CanvasTestPage extends Component {
             height={bX}
             fill={0xFFFF00}
           />
-          <Bunny x={bX} y={200} />
+          <Bunny
+            // Shows hand cursor
+            buttonMode
+            // Opt-in to interactivity
+            interactive
+            // Pointers normalize touch and mouse
+            pointerdown={this.handleClick}
+            x={bX}
+            y={200}
+          />
         </Stage>
       </div>
     );
