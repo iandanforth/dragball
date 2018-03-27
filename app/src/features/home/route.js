@@ -4,7 +4,8 @@
 import {
   DefaultPage,
   TestPage,
-  CanvasTestPage
+  CanvasTestPage,
+  Scene,
 } from './';
 
 export default {
@@ -23,5 +24,6 @@ export default {
       name: 'Canvas Test page',
       component: CanvasTestPage,
     },
+    { path: 'scene', name: 'Scene', component: Scene },
   ],
 };

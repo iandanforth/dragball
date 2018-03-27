@@ -1,0 +1,15 @@
+@import '../../styles/mixins';
+
+.home-scene {
+  height: 100%;
+  width: 100%;
+
+  .scene-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+  }
+
+}
