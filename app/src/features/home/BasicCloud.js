@@ -11,12 +11,18 @@ export default class BasicCloud extends Component {
   constructor() {
     super();
 
+    const offsets = [];
+    for (let i = 0; i <= 7; i++) {
+      const offset = Math.floor(Math.random() * 4); // TODO: Generate offset array once and move this back to render
+      offsets.push(offset);
+    }
+
     this.state = {
-      rects: []
+      offsets
     };
   }
 
-  componentDidMount() {
+  render() {
     const rects = [];
     const { x, y } = this.props;
 
@@ -26,7 +32,7 @@ export default class BasicCloud extends Component {
     const rectColor = 0xFFFFFF;
     for (let i = 0; i <= 7; i++) {
       const rectX = x + (i * baseRectSize);
-      const rectY = y + Math.floor(Math.random() * 4); // TODO: Generate offset array once and move this back to render
+      const rectY = y + this.state.offsets[i];
       const rect = (
         <Rectangle
           x={rectX}
@@ -73,12 +79,6 @@ export default class BasicCloud extends Component {
       rects.push(rect);
     }
 
-    this.setState({
-      rects
-    });
-  }
-
-  render() {
-    return this.state.rects;
+    return rects;
   }
 }
