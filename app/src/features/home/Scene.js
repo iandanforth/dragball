@@ -43,12 +43,14 @@ export default class Scene extends Component {
 
   updateCloudData() {
     const { cloudData } = this.state;
-    const driftSpeed = 3;
+    const driftSpeed = 0.03;
 
     for (let i = 0; i < cloudData.length; i++) {
       let [x, y] = cloudData[i];
-      x += 0.05;
-      // x = (Math.floor(x) % 800) - 120;
+      x += driftSpeed;
+      if (x > 800) {
+        x = -200;
+      }
       cloudData[i] = [x, y];
     }
 
