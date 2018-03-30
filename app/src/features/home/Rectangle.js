@@ -20,9 +20,10 @@ export const behavior = {
     instance.beginFill(fill);
     instance.drawRect(x, y, width, height);
     instance.endFill();
-    const blurFilter = new PIXI.filters.BlurFilter();
-    instance.filters = [blurFilter];
-    blurFilter.blur = 20;
+    // const blurFilter = new PIXI.filters.BlurFilter();
+    // instance.filters = [blurFilter];
+    // blurFilter.blurX = 20;
+    // blurFilter.blurY = 17;
   }
 };
 export default CustomPIXIComponent(behavior, TYPE);
