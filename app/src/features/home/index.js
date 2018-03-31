@@ -7,3 +7,4 @@ export { default as Rectangle } from './Rectangle';
 export { default as Scene } from './Scene';
 export { default as BasicCloud } from './BasicCloud';
 export { default as Curve } from './Curve';
+export { default as Bird } from './Bird';

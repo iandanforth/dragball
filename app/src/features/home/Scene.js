@@ -3,6 +3,7 @@ import { Stage } from 'react-pixi-fiber';
 import * as PIXI from 'pixi.js';
 import BasicCloud from './BasicCloud';
 import Curve from './Curve';
+import Bird from './Bird';
 
 export default class Scene extends Component {
   static propTypes = {
@@ -19,9 +20,8 @@ export default class Scene extends Component {
         [700, 250]
       ],
       flapDirection: 1,
-      wingTipY: 200,
-      shoulderY: 150,
-      wingTipXOffset: 0
+      wingTipYOffset: 100,
+      shoulderYOffset: 20,
     };
 
     this.getClouds = this.getClouds.bind(this);
@@ -63,17 +63,17 @@ export default class Scene extends Component {
   }
 
   update() {
-    let { wingTipY, shoulderY, wingTipXOffset, flapDirection } = this.state;
-    wingTipY += 8 * flapDirection;
-    shoulderY += 3 * -flapDirection;
+    let { wingTipYOffset, shoulderYOffset, flapDirection } = this.state;
+    wingTipYOffset += 8 * flapDirection;
+    shoulderYOffset += 3 * -flapDirection;
 
-    if (wingTipY > 220 || wingTipY < 100) { flapDirection *= -1; };
+    if (wingTipYOffset > 220 || wingTipYOffset < 100) { flapDirection *= -1; };
 
     this.setState({
       cloudData: this.updateCloudData(),
-      wingTipY,
+      wingTipYOffset,
       flapDirection,
-      shoulderY
+      shoulderYOffset
     });
 
     window.requestAnimationFrame(this.update);
@@ -86,27 +86,23 @@ export default class Scene extends Component {
       forceFXAA: true
     };
 
-    const { wingTipY, shoulderY } = this.state;
+    const { wingTipYOffset, shoulderYOffset } = this.state;
     return (
       <div className="home-scene">
         <div className="scene-container">
           <Stage width={800} height={600} options={sceneOptions}>
             { this.getClouds() }
-            <Curve
-              fromX={200}
-              fromY={190}
-              cpX={180}
-              cpY={shoulderY}
-              toX={100}
-              toY={wingTipY}
+            <Bird
+              centerX={200}
+              centerY={190}
+              shoulderYOffset={shoulderYOffset}
+              wingTipYOffset={wingTipYOffset}
             />
-            <Curve
-              fromX={200}
-              fromY={190}
-              cpX={220}
-              cpY={shoulderY}
-              toX={300}
-              toY={wingTipY}
+            <Bird
+              centerX={400}
+              centerY={300}
+              shoulderYOffset={shoulderYOffset}
+              wingTipYOffset={wingTipYOffset}
             />
           </Stage>
         </div>
