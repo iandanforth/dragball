@@ -2,7 +2,6 @@ import React, { Component } from 'react';
 import { Stage } from 'react-pixi-fiber';
 import * as PIXI from 'pixi.js';
 import BasicCloud from './BasicCloud';
-import Curve from './Curve';
 import Bird from './Bird';
 
 export default class Scene extends Component {
@@ -18,10 +17,7 @@ export default class Scene extends Component {
         [100, 100],
         [350, 120],
         [700, 250]
-      ],
-      flapDirection: 1,
-      wingTipYOffset: 100,
-      shoulderYOffset: 20,
+      ]
     };
 
     this.getClouds = this.getClouds.bind(this);
@@ -63,17 +59,8 @@ export default class Scene extends Component {
   }
 
   update() {
-    let { wingTipYOffset, shoulderYOffset, flapDirection } = this.state;
-    wingTipYOffset += 8 * flapDirection;
-    shoulderYOffset += 3 * -flapDirection;
-
-    if (wingTipYOffset > 220 || wingTipYOffset < 100) { flapDirection *= -1; };
-
     this.setState({
-      cloudData: this.updateCloudData(),
-      wingTipYOffset,
-      flapDirection,
-      shoulderYOffset
+      cloudData: this.updateCloudData()
     });
 
     window.requestAnimationFrame(this.update);
@@ -95,14 +82,12 @@ export default class Scene extends Component {
             <Bird
               centerX={200}
               centerY={190}
-              shoulderYOffset={shoulderYOffset}
-              wingTipYOffset={wingTipYOffset}
+              scale={1.1}
             />
             <Bird
               centerX={400}
               centerY={300}
-              shoulderYOffset={shoulderYOffset}
-              wingTipYOffset={wingTipYOffset}
+              scale={0.9}
             />
           </Stage>
         </div>

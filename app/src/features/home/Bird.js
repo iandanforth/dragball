@@ -6,18 +6,40 @@ export default class Bird extends Component {
   static propTypes = {
     centerX: PropTypes.number.isRequired,
     centerY: PropTypes.number.isRequired,
-    shoulderYOffset: PropTypes.number.isRequired,
-    wingTipYOffset: PropTypes.number.isRequired
+    scale: PropTypes.number
   };
 
-  render() {
-    const { centerX, centerY, shoulderYOffset, wingTipYOffset } = this.props;
+  static defaultProps = {
+    scale: 1
+  };
 
-    const lShoulderX = centerX - 20;
-    const rShoulderX = centerX + 20;
-    const shoulderY = (centerY - 40) - shoulderYOffset;
-    const lWingTipX = centerX - 100;
-    const rWingTipX = centerX + 100;
+  getOffsets() {
+    const { scale } = this.props;
+    const flapPeriod = 1;
+    const nowSeconds = Date.now() / 1000;
+    const time = nowSeconds * ((1 / flapPeriod) * 2 * Math.PI);
+
+    const offsets = {
+      shoulderYOffset: (-Math.sin(time) * 10) * scale,
+      wingTipYOffset: (Math.sin(time) * 40) * scale
+    };
+
+    return offsets;
+  }
+
+
+  render() {
+    const { centerX, centerY, scale } = this.props;
+    const { shoulderYOffset, wingTipYOffset } = this.getOffsets();
+
+    const shoulderXDistance = 20 * scale;
+    const shoulderYDstance = 40 * scale;
+    const wingLength = 100 * scale;
+    const lShoulderX = centerX - shoulderXDistance;
+    const rShoulderX = centerX + shoulderXDistance;
+    const shoulderY = (centerY - shoulderYDstance) - shoulderYOffset;
+    const lWingTipX = centerX - wingLength;
+    const rWingTipX = centerX + wingLength;
     const wingTipY = centerY - wingTipYOffset;
 
     return [
