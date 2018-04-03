@@ -6,6 +6,7 @@ import {
   TestPage,
   CanvasTestPage,
   Scene,
+  Camera,
 } from './';
 
 export default {
@@ -25,5 +26,6 @@ export default {
       component: CanvasTestPage,
     },
     { path: 'scene', name: 'Scene', component: Scene },
+    { path: 'camera', name: 'Camera', component: Camera },
   ],
 };
