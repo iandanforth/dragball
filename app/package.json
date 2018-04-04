@@ -82,6 +82,9 @@
   },
   "dependencies": {
     "@psychobolt/react-paperjs": "0.0.42",
+    "@tensorflow/tfjs": "^0.6.1",
+    "@tensorflow/tfjs-converter": "^0.1.0",
+    "@tensorflow/tfjs-core": "^0.6.0",
     "ajv": "^6.3.0",
     "paper": "^0.11.5",
     "pixi.js": "^4.7.1",
