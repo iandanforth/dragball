@@ -5,12 +5,11 @@ export default class Camera extends Component {
 
   };
 
-  componentDidMount() {
-    this.setupCamera();
+  async componentDidMount() {
+    const foo = this.setupCamera();
   }
 
   async setupCamera() {
-
     this.videoElement = document.getElementById('vid-box');
 
     if (navigator.mediaDevices && navigator.mediaDevices.getUserMedia) {
@@ -19,7 +18,7 @@ export default class Camera extends Component {
         'audio': false,
         'video': {facingMode: 'environment'}
       });
-      window.stream = stream;
+      // window.stream = stream; // This line doesn't seem needed, why is it here?
       this.videoElement.srcObject = stream;
       return new Promise((resolve) => {
         this.videoElement.onloadedmetadata = () => {
@@ -27,8 +26,9 @@ export default class Camera extends Component {
             this.videoElement.videoHeight]);
         };
       });
-
     }
+
+    return null;
   }
 
   render() {
